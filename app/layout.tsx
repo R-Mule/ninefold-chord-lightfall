@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     "Lightfall",
     "Ninefold Chord",
   ],
-  authors: [{ name: "Ninefold Chord", url: "" }],
+  authors: [{ name: "Ninefold Chord", url: "https://mcu-doomsday-clock.vercel.app" }],
   creator: "Ninefold Chord",
   twitter: {
     card: "summary_large_image",
     creator: "@Ninefold Chord",
   },
-  metadataBase: new URL(""),
+  metadataBase: new URL("https://mcu-doomsday-clock.vercel.app"),
 };
 
 export default function RootLayout({
