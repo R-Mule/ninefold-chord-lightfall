@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://mcu-doomsday-clock.vercel.app/sitemap.xml",
+    sitemap: "https://ninefold-chord-lightfall.vercel.app/sitemap.xml",
   };
 }
