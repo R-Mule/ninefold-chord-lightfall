@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     "Lightfall",
     "Ninefold Chord",
   ],
-  authors: [{ name: "Ninefold Chord", url: "https://kmaar.vercel.app" }],
+  authors: [{ name: "Ninefold Chord", url: "https://ninefold-chord-lightfall.vercel.app" }],
   creator: "Ninefold Chord",
   twitter: {
     card: "summary_large_image",
     creator: "@Ninefold Chord",
   },
-  metadataBase: new URL("https://wow-lightfall.vercel.app"),
+  metadataBase: new URL("https://ninefold-chord-lightfall.vercel.app/"),
 
 };
 
