@@ -92,7 +92,7 @@ export default function Countdown() {
   useEffect(() => {
     globalAudio = new Audio("/avengersdoomsday.mp3");
     globalAudio.loop = true;
-    globalAudio.volume = 1.0;
+    globalAudio.volume = 0.5;
     globalAudio.preload = "auto";
 
     let audioUnlocked = false;
