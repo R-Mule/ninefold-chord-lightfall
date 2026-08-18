@@ -107,7 +107,7 @@ export default function NotFound() {
         <p 
           className="font-['Cooper_Hewitt'] text-[1.5vmin] text-white/60 tracking-[0.2em] mb-8"
         >
-          This plane has been erased from existence
+          This plane will be erased.
         </p>
 
         {/* Button */}
