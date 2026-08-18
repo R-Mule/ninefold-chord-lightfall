@@ -89,7 +89,7 @@ export default function NotFound() {
       <div className="relative z-[100] text-center px-4">
         {/* 404 Number */}
         <h1 
-          className="font-[var(--font-cinzel)] text-[20vmin] font-bold text-white leading-none mb-2"
+          className="font-[var(--font-cinzel)] text-[10vmin] font-bold text-white leading-none mb-2"
           style={{ textShadow: "0 0 60px rgba(255, 255, 255, 0.4), 0 0 120px rgba(255, 0, 0, 0.2)" }}
         >
           404 - Light's Rest Not Found
