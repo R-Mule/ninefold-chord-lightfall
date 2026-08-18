@@ -31,7 +31,7 @@ export default function WillReturn() {
   const cycleStartRef = useRef<number>(0);
   const startedRef = useRef(false);
 
-  const name = searchParams.get("name") || "KMaar";
+  const name = searchParams.get("name") || "The Ninefold Chord";
 
   useEffect(() => {
     const unsubscribe = subscribeWillReturn(setEnabled);
@@ -88,7 +88,7 @@ export default function WillReturn() {
     <div className="absolute top-[70%] left-1/2 -translate-x-1/2 z-[100] pointer-events-none text-center whitespace-nowrap">
       <p className="font-['Cooper_Hewitt'] text-[1.5vmin] font-medium tracking-[0.2em] text-white/80 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
         <span className={`inline transition-opacity duration-1000 ${step >= 1 ? "opacity-100" : "opacity-0"}`}>
-          The Ninefold Chord
+          {name}
         </span>
         <span className={`inline transition-opacity duration-1000 ${step >= 2 ? "opacity-100" : "opacity-0"}`}>
           {" "}Will Return In{" "}
