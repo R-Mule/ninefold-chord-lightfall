@@ -246,57 +246,7 @@ export default function UtilityBar() {
         </div>
       )}
 
-      {/* Expandable Menu */}
-      <div
-        className={`flex flex-col gap-1 rounded-lg bg-black/30 backdrop-blur-sm p-1 transition-all duration-300 overflow-hidden ${
-          isOpen ? "opacity-100 translate-y-0 max-h-[300px]" : "opacity-0 translate-y-4 max-h-0 p-0"
-        }`}
-      >
-        <UtilityButton
-          icon={getAudioIcon()}
-          label={getAudioLabel()}
-          onClick={cycleAudio}
-        />
-        <UtilityButton
-          icon={<ParticleIcon />}
-          label="Particle Settings"
-          onClick={() => {
-            setParticleInput(getParticleCount().toString());
-            setShowParticlePopup(!showParticlePopup);
-          }}
-        />
-        <UtilityButton
-          icon={textEnabled ? <TextOnIcon /> : <TextOffIcon />}
-          label={textEnabled ? "Hide Text" : "Show Text"}
-          onClick={toggleText}
-        />
-        <UtilityButton
-          icon={<GitHubIcon />}
-          label="GitHub"
-          href="https://github.com/SudoKMaar/mcu-doomsday-clock"
-        />
-        <UtilityButton
-          icon={<LinkedInIcon />}
-          label="LinkedIn"
-          href="https://www.linkedin.com/in/AbhishekKMaar/"
-        />
-        <UtilityButton
-          icon={<PortfolioIcon />}
-          label="Portfolio"
-          href="https://kmaar.vercel.app/"
-        />
-      </div>
 
-      {/* Doom Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? "Close menu" : "Open menu"}
-        className={`p-3 rounded-full bg-black/30 backdrop-blur-sm text-white/30 hover:text-white/70 hover:bg-black/50 transition-all duration-300 cursor-pointer ${
-          isOpen ? "rotate-180" : ""
-        }`}
-      >
-        {isOpen ? <CloseIcon /> : <DoomIcon />}
-      </button>
     </div>
   );
 }
