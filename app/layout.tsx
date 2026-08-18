@@ -22,7 +22,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     creator: "@Ninefold Chord",
   },
-  metadataBase: new URL("https://mcu-doomsday-clock.vercel.app"),
+  metadataBase: new URL("https://wow-lightfall.vercel.app"),
+
 };
 
 export default function RootLayout({
