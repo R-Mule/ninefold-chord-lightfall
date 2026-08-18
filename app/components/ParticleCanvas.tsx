@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+const START_DATE = new Date("August 18, 2026 00:00:00");
+const TARGET_DATE = new Date("November 16, 2026 19:30:00");
 
 interface DustParticle {
   x: number;
@@ -33,6 +35,33 @@ export default function ParticleCanvas() {
   const particlesRef = useRef<DustParticle[]>([]);
   const animationRef = useRef<number>(0);
 
+    function calculateDynamicParticleCount() {
+    const now = new Date();
+
+    const maxParticles = 1000;
+    const minParticles = 50;
+
+    // If we've passed the target, max out
+    if (now >= TARGET_DATE) return maxParticles;
+
+    // Total timeline from START → TARGET
+    const totalSpan = TARGET_DATE.getTime() - START_DATE.getTime();
+
+    // How far we are from START → NOW
+    const elapsed = now.getTime() - START_DATE.getTime();
+
+    // Progress from 0 (start) to 1 (target)
+    const progress = elapsed / totalSpan;
+
+    // Clamp between 0–1
+    const clamped = Math.min(Math.max(progress, 0), 1);
+
+    // Cinematic divine easing curve
+    const eased = Math.pow(clamped, 3);
+
+    return Math.floor(minParticles + eased * (maxParticles - minParticles));
+  }
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -68,13 +97,27 @@ export default function ParticleCanvas() {
     const init = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      particlesRef.current = Array.from({ length: particleCount }, () => createParticle(true));
+      particleCount = calculateDynamicParticleCount();
+      particlesRef.current = Array.from(
+        { length: particleCount },
+        () => createParticle(true)
+      );
     };
 
     // Listen for particle count changes
     onParticleCountChange = init;
 
     const animate = () => {
+      const targetCount = calculateDynamicParticleCount();
+
+if (targetCount !== particleCount) {
+  particleCount = targetCount;
+  particlesRef.current = Array.from(
+    { length: particleCount },
+    () => createParticle(true)
+  );
+}
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 1000;
 
