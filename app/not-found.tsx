@@ -92,7 +92,7 @@ export default function NotFound() {
           className="font-[var(--font-cinzel)] text-[20vmin] font-bold text-white leading-none mb-2"
           style={{ textShadow: "0 0 60px rgba(255, 255, 255, 0.4), 0 0 120px rgba(255, 0, 0, 0.2)" }}
         >
-          404
+          404 - Light's Rest Not Found
         </h1>
 
         {/* Main Message */}
@@ -100,14 +100,14 @@ export default function NotFound() {
           className="font-[var(--font-cinzel)] text-[3vmin] font-bold text-white tracking-[0.5vmin] mb-4"
           style={{ textShadow: "0 0.4vmin 2vmin rgba(255, 255, 255, 0.377)" }}
         >
-          THE WHISPERED ONE HAS DESTROYED THIS PAGE
+          THE WHISPERED ONE IS HERE
         </p>
 
         {/* Sub Message */}
         <p 
           className="font-['Cooper_Hewitt'] text-[1.5vmin] text-white/60 tracking-[0.2em] mb-8"
         >
-          This timeline has been erased from existence
+          This plane has been erased from existence
         </p>
 
         {/* Button */}
@@ -115,7 +115,7 @@ export default function NotFound() {
           href="/"
           className="inline-block font-['Cooper_Hewitt'] text-[1.2vmin] tracking-[0.3em] text-white/80 border border-white/20 px-8 py-3 rounded hover:bg-white/10 hover:border-white/40 hover:text-white transition-all duration-300"
         >
-          ESCAPE TO A SAFER TIMELINE →
+          ESCAPE TO A SAFER PLANE →
         </Link>
       </div>
     </div>
