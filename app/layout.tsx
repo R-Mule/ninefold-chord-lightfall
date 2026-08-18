@@ -9,42 +9,20 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "MCU Doomsday Clock | Avengers: Doomsday Countdown",
+  title: "Lightfall Clock | Lightfall Countdown",
   description:
-    "Countdown to Avengers: Doomsday releasing December 18, 2026. Experience the cinematic countdown with immersive visuals and ambient effects.",
+    "Countdown to Lightfall: releasing November 16, 2026.",
   keywords: [
-    "Avengers Doomsday",
-    "MCU",
-    "Marvel",
-    "Countdown",
-    "Doomsday Clock",
-    "Avengers 5",
-    "Marvel Cinematic Universe",
-    "December 2026",
-    "Abhishek Kumar",
-    "Abhishek KMaar",
-    "KMaar",
-    "Marvel Countdown Timer",
-    "Avengers Doomsday Release Date",
-    "MCU Phase 6",
-    "Doctor Doom",
-    "Robert Downey Jr",
-    "Avengers 2026",
-    "Marvel Movie Countdown",
-    "Doomsday Movie",
-    "Avengers Secret Wars",
-    "MCU Multiverse",
-    "Marvel Studios",
-    "Superhero Movie",
-    "Comic Book Movie",
+    "Lightfall",
+    "Ninefold Chord",
   ],
-  authors: [{ name: "KMaar", url: "https://kmaar.vercel.app" }],
-  creator: "KMaar",
+  authors: [{ name: "Ninefold Chord", url: "" }],
+  creator: "Ninefold Chord",
   twitter: {
     card: "summary_large_image",
-    creator: "@kmaar44",
+    creator: "@Ninefold Chord",
   },
-  metadataBase: new URL("https://mcu-doomsday-clock.vercel.app"),
+  metadataBase: new URL(""),
 };
 
 export default function RootLayout({
