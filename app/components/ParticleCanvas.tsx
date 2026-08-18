@@ -49,6 +49,7 @@ export default function ParticleCanvas() {
       fadeSpeed: Math.random() * 0.002 + 0.001,
       fadingOut: Math.random() > 0.5,
       angle: Math.random() * Math.PI * 2,
+      colorShift: Math.random() * 40,
     });
 
     const resetParticle = (p: DustParticle) => {
@@ -96,9 +97,19 @@ export default function ParticleCanvas() {
           if (p.alpha >= 0.7) p.fadingOut = true;
         }
 
+        const r = p.baseSize * scaleFactor;
+        
+        const gradient = ctx.createRadialGradient(
+          p.x, p.y, 0,
+          p.x, p.y, r * 2
+        );
+        
+        gradient.addColorStop(0, `rgba(255, 255, 200, ${p.alpha})`);   // bright center
+        gradient.addColorStop(1, `rgba(255, 215, 0, 0)`);               // fade to gold
+        
+        ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.baseSize * scaleFactor, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180, 255, 200, ${p.alpha})`;
+        ctx.arc(p.x, p.y, r * 2, 0, Math.PI * 2);
         ctx.fill();
       });
 
