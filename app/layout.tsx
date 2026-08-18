@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "Lightfall",
     "Ninefold Chord",
   ],
-  authors: [{ name: "Ninefold Chord", url: "https://mcu-doomsday-clock.vercel.app" }],
+  authors: [{ name: "Ninefold Chord", url: "https://kmaar.vercel.app" }],
   creator: "Ninefold Chord",
   twitter: {
     card: "summary_large_image",
