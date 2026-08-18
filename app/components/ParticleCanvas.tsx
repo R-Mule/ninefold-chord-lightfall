@@ -12,6 +12,7 @@ interface DustParticle {
   fadeSpeed: number;
   fadingOut: boolean;
   angle: number;
+  colorShift: number;
 }
 
 // Global particle count with getter/setter
