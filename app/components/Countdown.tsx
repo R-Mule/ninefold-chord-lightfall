@@ -207,7 +207,7 @@ export default function Countdown() {
           opacity: showDate ? 1 : 0 
         }}
       >
-        DECEMBER 18, 2026
+        NOVEMBER 16, 2026
       </div>
 
       {/* Countdown wrapper */}
