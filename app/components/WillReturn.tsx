@@ -94,7 +94,7 @@ export default function WillReturn() {
           {" "}Will Return In{" "}
         </span>
         <span className={`inline transition-opacity duration-1000 ${step >= 3 ? "opacity-100" : "opacity-0"}`}>
-          Avengers: Doomsday
+          Lightfall
         </span>
       </p>
     </div>
