@@ -1,6 +1,6 @@
-# MCU Doomsday Clock
+# The Ninefold Chord Lightfall Clock
 
-An immersive countdown experience for Avengers: Doomsday, releasing December 18, 2026.
+An immersive countdown experience for The Ninefold Chord: Doomsday, releasing November 16, 2026.
 
 ## Features
 
