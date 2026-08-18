@@ -39,6 +39,10 @@ function formatTwoDigits(num: number): string {
   return num < 10 ? "0" + num : "" + num;
 }
 
+function pluralize(label: string, value: number) {
+  return value === 1 ? label.slice(0, -1) : label;
+}
+
 // Audio tracks
 export const AUDIO_TRACKS = {
   THEME: "/avengersdoomsday.mp3",
@@ -215,15 +219,35 @@ export default function Countdown() {
         className="flex items-start gap-[1.5vmin] sm:gap-[1vmin] transition-opacity duration-500"
         style={{ opacity: showDate ? 0 : 1 }}
       >
-        <TimeBox value={displayValues.months} label="MONTHS" />
-        <Separator />
-        <TimeBox value={displayValues.days} label="DAYS" />
-        <Separator />
-        <TimeBox value={displayValues.hours} label="HOURS" />
-        <Separator />
-        <TimeBox value={displayValues.minutes} label="MINUTES" />
-        <Separator />
-        <TimeBox value={displayValues.seconds} label="SECONDS" />
+<TimeBox
+  value={displayValues.months}
+  label={pluralize("MONTHS", time?.months ?? 0)}
+/>
+<Separator />
+
+<TimeBox
+  value={displayValues.days}
+  label={pluralize("DAYS", time?.days ?? 0)}
+/>
+<Separator />
+
+<TimeBox
+  value={displayValues.hours}
+  label={pluralize("HOURS", time?.hours ?? 0)}
+/>
+<Separator />
+
+<TimeBox
+  value={displayValues.minutes}
+  label={pluralize("MINUTES", time?.minutes ?? 0)}
+/>
+<Separator />
+
+<TimeBox
+  value={displayValues.seconds}
+  label={pluralize("SECONDS", time?.seconds ?? 0)}
+/>
+
       </div>
     </div>
   );
