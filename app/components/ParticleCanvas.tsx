@@ -170,16 +170,15 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  // ⭐ RELIABLE HUMAN-FRIENDLY CIRCLE DETECTOR
+  // ⭐ RELIABLE ROTATION-BASED CIRCLE DETECTOR
   useEffect(() => {
     let lastX = 0;
     let lastY = 0;
-    let startX = 0;
-    let startY = 0;
+    let lastAngle = 0;
 
     let totalRotation = 0;
-    let clockwiseCount = 0;
-    let totalDistance = 0;
+    let clockwiseSteps = 0;
+    let totalSteps = 0;
 
     let circleCount = 0;
     let tracking = false;
@@ -190,42 +189,37 @@ export default function ParticleCanvas() {
 
       if (!tracking) {
         tracking = true;
-        startX = x;
-        startY = y;
         lastX = x;
         lastY = y;
+        lastAngle = 0;
         totalRotation = 0;
-        clockwiseCount = 0;
-        totalDistance = 0;
+        clockwiseSteps = 0;
+        totalSteps = 0;
         return;
       }
 
-      const dx1 = lastX - startX;
-      const dy1 = lastY - startY;
-      const dx2 = x - startX;
-      const dy2 = y - startY;
+      const dx = x - lastX;
+      const dy = y - lastY;
 
-      const angle1 = Math.atan2(dy1, dx1);
-      const angle2 = Math.atan2(dy2, dx2);
-
-      let diff = angle2 - angle1;
+      const angle = Math.atan2(dy, dx);
+      let diff = angle - lastAngle;
 
       if (diff > Math.PI) diff -= Math.PI * 2;
       if (diff < -Math.PI) diff += Math.PI * 2;
 
       totalRotation += Math.abs(diff);
-      if (diff < 0) clockwiseCount++;
+      totalSteps++;
 
-      totalDistance += Math.hypot(x - lastX, y - lastY);
+      if (diff < 0) clockwiseSteps++;
 
       lastX = x;
       lastY = y;
+      lastAngle = angle;
 
       // ⭐ Circle detection thresholds
       if (
-        totalRotation > Math.PI * 1.6 && // ~80% of a circle
-        clockwiseCount / (totalRotation / 0.1) > 0.45 && // mostly clockwise
-        totalDistance > 250 // moved enough
+        totalRotation > Math.PI * 1.8 && // ~90% of a circle
+        clockwiseSteps / totalSteps > 0.45 // mostly clockwise
       ) {
         circleCount++;
 
