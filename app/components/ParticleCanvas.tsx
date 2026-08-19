@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
 const START_DATE = new Date("August 18, 2026 00:00:00");
 const TARGET_DATE = new Date("November 16, 2026 19:30:00");
 
@@ -18,6 +17,7 @@ interface DustParticle {
   colorShift: number;
 }
 
+// Global particle count with getter/setter
 let particleCount = 100;
 let onParticleCountChange: (() => void) | null = null;
 
@@ -26,7 +26,7 @@ export function getParticleCount() {
 }
 
 export function setParticleCount(count: number) {
-  particleCount = Math.max(10, Math.min(2000, count));
+  particleCount = Math.max(10, Math.min(1000, count)); // Clamp between 10-1000
   onParticleCountChange?.();
 }
 
@@ -35,22 +35,33 @@ export default function ParticleCanvas() {
   const particlesRef = useRef<DustParticle[]>([]);
   const animationRef = useRef<number>(0);
 
-  function calculateDynamicParticleCount() {
+    function calculateDynamicParticleCount() {
     const now = new Date();
+
     const maxParticles = 1000;
     const minParticles = 50;
 
+    // If we've passed the target, max out
     if (now >= TARGET_DATE) return maxParticles;
 
+    // Total timeline from START → TARGET
     const totalSpan = TARGET_DATE.getTime() - START_DATE.getTime();
+
+    // How far we are from START → NOW
     const elapsed = now.getTime() - START_DATE.getTime();
+
+    // Progress from 0 (start) to 1 (target)
     const progress = elapsed / totalSpan;
-    const eased = Math.pow(Math.min(Math.max(progress, 0), 1), 3);
+
+    // Clamp between 0–1
+    const clamped = Math.min(Math.max(progress, 0), 1);
+
+    // Cinematic divine easing curve
+    const eased = Math.pow(clamped, 3);
 
     return Math.floor(minParticles + eased * (maxParticles - minParticles));
   }
-
-  // ⭐ PARTICLE SYSTEM
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -93,18 +104,19 @@ export default function ParticleCanvas() {
       );
     };
 
+    // Listen for particle count changes
     onParticleCountChange = init;
 
     const animate = () => {
       const targetCount = calculateDynamicParticleCount();
 
-      if (targetCount !== particleCount) {
-        particleCount = targetCount;
-        particlesRef.current = Array.from(
-          { length: particleCount },
-          () => createParticle(true)
-        );
-      }
+if (targetCount !== particleCount) {
+  particleCount = targetCount;
+  particlesRef.current = Array.from(
+    { length: particleCount },
+    () => createParticle(true)
+  );
+}
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 1000;
@@ -114,12 +126,7 @@ export default function ParticleCanvas() {
         p.x += p.baseVx * scaleFactor + Math.sin(p.angle) * (0.1 * scaleFactor);
         p.y += p.baseVy * scaleFactor;
 
-        if (
-          p.x < 0 ||
-          p.x > window.innerWidth ||
-          p.y < 0 ||
-          p.y > window.innerHeight
-        ) {
+        if (p.x < 0 || p.x > window.innerWidth || p.y < 0 || p.y > window.innerHeight) {
           resetParticle(p);
         }
 
@@ -135,19 +142,15 @@ export default function ParticleCanvas() {
         }
 
         const r = p.baseSize * scaleFactor;
-
+        
         const gradient = ctx.createRadialGradient(
-          p.x,
-          p.y,
-          0,
-          p.x,
-          p.y,
-          r * 2
+          p.x, p.y, 0,
+          p.x, p.y, r * 2
         );
-
-        gradient.addColorStop(0, `rgba(255, 255, 200, ${p.alpha})`);
-        gradient.addColorStop(1, `rgba(255, 215, 0, 0)`);
-
+        
+        gradient.addColorStop(0, `rgba(255, 255, 200, ${p.alpha})`);   // bright center
+        gradient.addColorStop(1, `rgba(255, 215, 0, 0)`);               // fade to gold
+        
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r * 2, 0, Math.PI * 2);
@@ -170,66 +173,5 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  // ⭐ QUADRANT-BASED LOOP DETECTOR (RELIABLE)
-  useEffect(() => {
-    let startX = 0;
-    let startY = 0;
-    let tracking = false;
-
-    let quadrantSequence: number[] = [];
-    let circleCount = 0;
-
-    const getQuadrant = (x: number, y: number) => {
-      const dx = x - startX;
-      const dy = y - startY;
-
-      if (dx >= 0 && dy < 0) return 1;  // top-right
-      if (dx < 0 && dy < 0) return 2;   // top-left
-      if (dx < 0 && dy >= 0) return 3;  // bottom-left
-      return 4;                         // bottom-right
-    };
-
-    const handler = (e: MouseEvent) => {
-      const x = e.clientX;
-      const y = e.clientY;
-
-      if (!tracking) {
-        tracking = true;
-        startX = x;
-        startY = y;
-        quadrantSequence = [];
-        return;
-      }
-
-      const q = getQuadrant(x, y);
-
-      if (quadrantSequence[quadrantSequence.length - 1] !== q) {
-        quadrantSequence.push(q);
-      }
-
-      // ⭐ Detect clockwise loop: 1 → 4 → 3 → 2 → 1
-      const clockwisePattern = [1, 4, 3, 2, 1];
-
-      if (quadrantSequence.join(",").includes(clockwisePattern.join(","))) {
-        circleCount++;
-
-        if (circleCount >= 9) {
-          setParticleCount(getParticleCount() + 300);
-          circleCount = 0;
-        }
-
-        tracking = false;
-      }
-    };
-
-    window.addEventListener("mousemove", handler);
-    return () => window.removeEventListener("mousemove", handler);
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="particle-canvas absolute inset-0 z-[8] pointer-events-none"
-    />
-  );
+  return <canvas ref={canvasRef} className="particle-canvas absolute inset-0 z-[8] pointer-events-none" />;
 }
