@@ -18,7 +18,6 @@ interface DustParticle {
   colorShift: number;
 }
 
-// Global particle count with getter/setter
 let particleCount = 100;
 let onParticleCountChange: (() => void) | null = null;
 
@@ -27,7 +26,7 @@ export function getParticleCount() {
 }
 
 export function setParticleCount(count: number) {
-  particleCount = Math.max(10, Math.min(2000, count)); // Clamp between 10–2000
+  particleCount = Math.max(10, Math.min(2000, count));
   onParticleCountChange?.();
 }
 
@@ -38,7 +37,6 @@ export default function ParticleCanvas() {
 
   function calculateDynamicParticleCount() {
     const now = new Date();
-
     const maxParticles = 1000;
     const minParticles = 50;
 
@@ -47,8 +45,7 @@ export default function ParticleCanvas() {
     const totalSpan = TARGET_DATE.getTime() - START_DATE.getTime();
     const elapsed = now.getTime() - START_DATE.getTime();
     const progress = elapsed / totalSpan;
-    const clamped = Math.min(Math.max(progress, 0), 1);
-    const eased = Math.pow(clamped, 3);
+    const eased = Math.pow(Math.min(Math.max(progress, 0), 1), 3);
 
     return Math.floor(minParticles + eased * (maxParticles - minParticles));
   }
@@ -173,65 +170,72 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  // ⭐ LOOSE 9-CIRCLE CLOCKWISE RITUAL
+  // ⭐ RELIABLE HUMAN-FRIENDLY CIRCLE DETECTOR
   useEffect(() => {
-    let points: { x: number; y: number }[] = [];
-    let circleCount = 0;
+    let lastX = 0;
+    let lastY = 0;
+    let startX = 0;
+    let startY = 0;
 
-    const MIN_POINTS = 25;
-    const MIN_RADIUS = 40;
-    const MAX_RADIUS_VARIANCE = 0.75;
-    const CLOCKWISE_THRESHOLD = 0.45;
+    let totalRotation = 0;
+    let clockwiseCount = 0;
+    let totalDistance = 0;
+
+    let circleCount = 0;
+    let tracking = false;
 
     const handler = (e: MouseEvent) => {
-      points.push({ x: e.clientX, y: e.clientY });
+      const x = e.clientX;
+      const y = e.clientY;
 
-      if (points.length < MIN_POINTS) return;
-
-      const cx = points.reduce((a, p) => a + p.x, 0) / points.length;
-      const cy = points.reduce((a, p) => a + p.y, 0) / points.length;
-
-      const radii = points.map((p) => Math.hypot(p.x - cx, p.y - cy));
-      const avgRadius = radii.reduce((a, r) => a + r, 0) / radii.length;
-
-      const variance =
-        radii.filter(
-          (r) =>
-            Math.abs(r - avgRadius) >
-            avgRadius * MAX_RADIUS_VARIANCE
-        ).length / radii.length;
-
-      if (avgRadius < MIN_RADIUS || variance > 0.55) {
-        points = [];
+      if (!tracking) {
+        tracking = true;
+        startX = x;
+        startY = y;
+        lastX = x;
+        lastY = y;
+        totalRotation = 0;
+        clockwiseCount = 0;
+        totalDistance = 0;
         return;
       }
 
-      const angles = points.map((p) =>
-        Math.atan2(p.y - cy, p.x - cx)
-      );
+      const dx1 = lastX - startX;
+      const dy1 = lastY - startY;
+      const dx2 = x - startX;
+      const dy2 = y - startY;
 
-      let clockwise = 0;
-      for (let i = 1; i < angles.length; i++) {
-        let diff = angles[i] - angles[i - 1];
+      const angle1 = Math.atan2(dy1, dx1);
+      const angle2 = Math.atan2(dy2, dx2);
 
-        if (diff > Math.PI) diff -= Math.PI * 2;
-        if (diff < -Math.PI) diff += Math.PI * 2;
+      let diff = angle2 - angle1;
 
-        if (diff < 0) clockwise++;
-      }
+      if (diff > Math.PI) diff -= Math.PI * 2;
+      if (diff < -Math.PI) diff += Math.PI * 2;
 
-      const clockwiseRatio = clockwise / angles.length;
+      totalRotation += Math.abs(diff);
+      if (diff < 0) clockwiseCount++;
 
-      if (clockwiseRatio > CLOCKWISE_THRESHOLD) {
+      totalDistance += Math.hypot(x - lastX, y - lastY);
+
+      lastX = x;
+      lastY = y;
+
+      // ⭐ Circle detection thresholds
+      if (
+        totalRotation > Math.PI * 1.6 && // ~80% of a circle
+        clockwiseCount / (totalRotation / 0.1) > 0.45 && // mostly clockwise
+        totalDistance > 250 // moved enough
+      ) {
         circleCount++;
 
         if (circleCount >= 9) {
           setParticleCount(getParticleCount() + 300);
           circleCount = 0;
         }
-      }
 
-      points = [];
+        tracking = false;
+      }
     };
 
     window.addEventListener("mousemove", handler);
