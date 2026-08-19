@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
+// Import the same global audio system used in countdown
+import { getAudio, switchTrack } from "../countdown/page"; // adjust path if needed
+
 function lerp(start: number, end: number, factor: number): number {
   return start + (end - start) * factor;
 }
@@ -14,39 +17,58 @@ export default function NotFound() {
   const currentPos = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number>(0);
 
+  useEffect(() => {
+    setIsActive(true);
 
-useEffect(() => {
-  setIsActive(true);
+    // ⭐ USE THE EXACT SAME AUDIO SYSTEM AS COUNTDOWN ⭐
+    let globalAudio = getAudio();
 
-  // ⭐ AUDIO AUTOPLAY SETUP ⭐
-  const audio = new Audio("/You Shall Be Remembered.mp3");
-  audio.loop = true;
-  audio.volume = 0;        // start silent
-  audio.muted = true;      // required for autoplay
-  audio.preload = "auto";
+    if (!globalAudio) {
+      globalAudio = new Audio("/You Shall Be Remembered.mp3");
+      globalAudio.loop = true;
+      globalAudio.volume = 0.5;
+      globalAudio.preload = "auto";
+    } else {
+      // If countdown audio exists, switch track
+      switchTrack("/You Shall Be Remembered.mp3");
+    }
 
-  audio.play().then(() => {
-    // Unmute and fade in
-    audio.muted = false;
+    let audioUnlocked = false;
 
-    let v = 0;
-    const fade = setInterval(() => {
-      v += 0.02; // fade speed
-      audio.volume = Math.min(v, 1.0);
-      if (v >= 1.0) clearInterval(fade);
-    }, 100);
-  }).catch(() => {
-    // If autoplay fails, wait for user interaction
-    const unlock = () => {
-      audio.play().catch(() => {});
-      document.removeEventListener("click", unlock);
-      document.removeEventListener("keydown", unlock);
+    const tryPlayAudio = () => {
+      if (!globalAudio || audioUnlocked) return;
+
+      globalAudio.play()
+        .then(() => {
+          audioUnlocked = true;
+          removeListeners();
+        })
+        .catch(() => {
+          // Autoplay blocked, will retry on user interaction
+        });
     };
 
-    document.addEventListener("click", unlock);
-    document.addEventListener("keydown", unlock);
-  });
+    const enableAudio = () => {
+      tryPlayAudio();
+    };
 
+    const removeListeners = () => {
+      document.removeEventListener("click", enableAudio);
+      document.removeEventListener("touchstart", enableAudio);
+      document.removeEventListener("keydown", enableAudio);
+      document.removeEventListener("scroll", enableAudio);
+    };
+
+    // Same unlock listeners as countdown page
+    document.addEventListener("click", enableAudio);
+    document.addEventListener("touchstart", enableAudio);
+    document.addEventListener("keydown", enableAudio);
+    document.addEventListener("scroll", enableAudio);
+
+    // Try autoplay immediately
+    tryPlayAudio();
+
+    // ⭐ MOUSE MOVEMENT LOGIC ⭐
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
     };
@@ -81,8 +103,14 @@ useEffect(() => {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationRef.current);
-        // Stop audio when leaving page
-  audio.pause();
+
+      // Stop audio when leaving page
+      globalAudio?.pause();
+
+      document.removeEventListener("click", enableAudio);
+      document.removeEventListener("touchstart", enableAudio);
+      document.removeEventListener("keydown", enableAudio);
+      document.removeEventListener("scroll", enableAudio);
     };
   }, []);
 
@@ -119,7 +147,6 @@ useEffect(() => {
 
       {/* 404 Content */}
       <div className="relative z-[100] text-center px-4">
-        {/* 404 Number */}
         <h1 
           className="font-[var(--font-cinzel)] text-[10vmin] font-bold text-white leading-none mb-2"
           style={{ textShadow: "0 0 60px rgba(255, 255, 255, 0.4), 0 0 120px rgba(255, 0, 0, 0.2)" }}
@@ -127,7 +154,6 @@ useEffect(() => {
           404 - Light's Rest Not Found
         </h1>
 
-        {/* Main Message */}
         <p 
           className="font-[var(--font-cinzel)] text-[3vmin] font-bold text-white tracking-[0.5vmin] mb-4"
           style={{ textShadow: "0 0.4vmin 2vmin rgba(255, 255, 255, 0.377)" }}
@@ -135,14 +161,12 @@ useEffect(() => {
           THE WHISPERED ONE IS HERE
         </p>
 
-        {/* Sub Message */}
         <p 
           className="font-['Cooper_Hewitt'] text-[1.5vmin] text-white/60 tracking-[0.2em] mb-8"
         >
           This plane will be erased.
         </p>
 
-        {/* Button */}
         <Link
           href="/"
           className="inline-block font-['Cooper_Hewitt'] text-[1.2vmin] tracking-[0.3em] text-white/80 border border-white/20 px-8 py-3 rounded hover:bg-white/10 hover:border-white/40 hover:text-white transition-all duration-300"
