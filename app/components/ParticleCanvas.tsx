@@ -170,18 +170,24 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  // ⭐ RELIABLE ROTATION-BASED CIRCLE DETECTOR
+  // ⭐ QUADRANT-BASED LOOP DETECTOR (RELIABLE)
   useEffect(() => {
-    let lastX = 0;
-    let lastY = 0;
-    let lastAngle = 0;
-
-    let totalRotation = 0;
-    let clockwiseSteps = 0;
-    let totalSteps = 0;
-
-    let circleCount = 0;
+    let startX = 0;
+    let startY = 0;
     let tracking = false;
+
+    let quadrantSequence: number[] = [];
+    let circleCount = 0;
+
+    const getQuadrant = (x: number, y: number) => {
+      const dx = x - startX;
+      const dy = y - startY;
+
+      if (dx >= 0 && dy < 0) return 1;  // top-right
+      if (dx < 0 && dy < 0) return 2;   // top-left
+      if (dx < 0 && dy >= 0) return 3;  // bottom-left
+      return 4;                         // bottom-right
+    };
 
     const handler = (e: MouseEvent) => {
       const x = e.clientX;
@@ -189,38 +195,22 @@ export default function ParticleCanvas() {
 
       if (!tracking) {
         tracking = true;
-        lastX = x;
-        lastY = y;
-        lastAngle = 0;
-        totalRotation = 0;
-        clockwiseSteps = 0;
-        totalSteps = 0;
+        startX = x;
+        startY = y;
+        quadrantSequence = [];
         return;
       }
 
-      const dx = x - lastX;
-      const dy = y - lastY;
+      const q = getQuadrant(x, y);
 
-      const angle = Math.atan2(dy, dx);
-      let diff = angle - lastAngle;
+      if (quadrantSequence[quadrantSequence.length - 1] !== q) {
+        quadrantSequence.push(q);
+      }
 
-      if (diff > Math.PI) diff -= Math.PI * 2;
-      if (diff < -Math.PI) diff += Math.PI * 2;
+      // ⭐ Detect clockwise loop: 1 → 4 → 3 → 2 → 1
+      const clockwisePattern = [1, 4, 3, 2, 1];
 
-      totalRotation += Math.abs(diff);
-      totalSteps++;
-
-      if (diff < 0) clockwiseSteps++;
-
-      lastX = x;
-      lastY = y;
-      lastAngle = angle;
-
-      // ⭐ Circle detection thresholds
-      if (
-        totalRotation > Math.PI * 1.8 && // ~90% of a circle
-        clockwiseSteps / totalSteps > 0.45 // mostly clockwise
-      ) {
+      if (quadrantSequence.join(",").includes(clockwisePattern.join(","))) {
         circleCount++;
 
         if (circleCount >= 9) {
