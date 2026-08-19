@@ -94,6 +94,7 @@ export default function Countdown() {
     globalAudio.loop = true;
     globalAudio.volume = 0.5;
     globalAudio.preload = "auto";
+    document.body.click();
 
     let audioUnlocked = false;
 
