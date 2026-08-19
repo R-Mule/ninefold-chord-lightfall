@@ -7,6 +7,11 @@ function lerp(start: number, end: number, factor: number): number {
   return start + (end - start) * factor;
 }
 
+// ⭐ Base64 decode helper
+function d(s: string) {
+  return atob(s);
+}
+
 export default function NotFound() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -56,7 +61,6 @@ export default function NotFound() {
     document.addEventListener("scroll", enableAudio);
 
     // ⭐ FORCE A SYNTHETIC CLICK TO UNLOCK AUDIO ⭐
-    // Browsers block autoplay on secondary pages unless interaction is simulated
     document.body.click();
 
     // Try autoplay immediately
@@ -144,27 +148,27 @@ export default function NotFound() {
           className="font-[var(--font-cinzel)] text-[10vmin] font-bold text-white leading-none mb-2"
           style={{ textShadow: "0 0 60px rgba(255, 255, 255, 0.4), 0 0 120px rgba(255, 0, 0, 0.2)" }}
         >
-          404 - Light's Rest Not Found
+          {d("NDA0IC0gTGlnaHQncyBSZXN0IE5vdCBGb3VuZA==")}
         </h1>
 
         <p 
           className="font-[var(--font-cinzel)] text-[3vmin] font-bold text-white tracking-[0.5vmin] mb-4"
           style={{ textShadow: "0 0.4vmin 2vmin rgba(255, 255, 255, 0.377)" }}
         >
-          The Whispered One has returned.
+          {d("VGhlIFdoaXNwZXJlZCBPbmUgaGFzIHJldHVybmVkLg==")}
         </p>
 
         <p 
           className="font-['Cooper_Hewitt'] text-[1.5vmin] text-white/60 tracking-[0.2em] mb-8"
         >
-          This plane will be erased.
+          {d("VGhpcyBwbGFuZSB3aWxsIGJlIGVyYXNlZC4=")}
         </p>
 
         <Link
           href="/"
           className="inline-block font-['Cooper_Hewitt'] text-[1.2vmin] tracking-[0.3em] text-white/80 border border-white/20 px-8 py-3 rounded hover:bg-white/10 hover:border-white/40 hover:text-white transition-all duration-300"
         >
-          ESCAPE TO A SAFER PLANE →
+          {d("RVNDQVBFIFRPIEEgU0FGRVIgUExBTkUg4oCm")}
         </Link>
       </div>
     </div>
