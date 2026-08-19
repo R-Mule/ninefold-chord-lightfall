@@ -14,8 +14,7 @@ export default function NotFound() {
   const currentPos = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number>(0);
 
-  useEffect(() => {
-    setIsActive(true);
+
 useEffect(() => {
   setIsActive(true);
 
