@@ -22,7 +22,6 @@ export default function NotFound() {
   useEffect(() => {
     setIsActive(true);
 
-    // ⭐ LOCAL AUDIO INSTANCE (same pattern as countdown page)
     const audio = new Audio("/You Shall Be Remembered.mp3");
     audio.loop = true;
     audio.volume = 0.5;
@@ -38,9 +37,7 @@ export default function NotFound() {
           audioUnlocked = true;
           removeListeners();
         })
-        .catch(() => {
-          // Autoplay blocked → wait for user interaction
-        });
+        .catch(() => {});
     };
 
     const enableAudio = () => {
@@ -54,19 +51,14 @@ export default function NotFound() {
       document.removeEventListener("scroll", enableAudio);
     };
 
-    // Same unlock listeners as countdown page
     document.addEventListener("click", enableAudio);
     document.addEventListener("touchstart", enableAudio);
     document.addEventListener("keydown", enableAudio);
     document.addEventListener("scroll", enableAudio);
 
-    // ⭐ FORCE A SYNTHETIC CLICK TO UNLOCK AUDIO ⭐
     document.body.click();
-
-    // Try autoplay immediately
     tryPlayAudio();
 
-    // ⭐ MOUSE MOVEMENT LOGIC ⭐
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
     };
@@ -116,33 +108,17 @@ export default function NotFound() {
       ref={sceneRef}
       className={`scene relative w-screen h-screen flex justify-center items-center ${isActive ? "active" : ""}`}
     >
-      {/* Background */}
       <div className="bg-base absolute inset-0 z-[1] bg-cover bg-center brightness-0" style={{ backgroundImage: "url('/doomsday-bg.png')" }} />
-      
-      {/* God rays */}
       <div className="god-rays absolute -top-[100vmin] -left-[100vmin] -right-[100vmin] -bottom-[100vmin] z-[2] mix-blend-color-dodge blur-[2vmin] pointer-events-none scale-[1.4]" />
-      
-      {/* Ambient glow */}
       <div className="ambient-glow absolute inset-0 z-[3] bg-cover bg-center mix-blend-color-dodge pointer-events-none opacity-0" style={{ backgroundImage: "url('/doomsday-bg.png')" }} />
-      
-      {/* 3D shadow effect */}
       <div className="faux-3d-shadow absolute inset-0 z-[4] mix-blend-multiply pointer-events-none" />
-      
-      {/* Specular highlight */}
       <div className="faux-3d-specular absolute inset-0 z-[5] mix-blend-overlay pointer-events-none" />
-      
-      {/* Mouse bloom */}
       <div className="mouse-bloom absolute inset-0 z-[6] mix-blend-color-dodge pointer-events-none" />
-      
-      {/* Fog */}
       <div className="absolute w-full h-full overflow-hidden z-[7] pointer-events-none opacity-40 mix-blend-screen">
         <div className="fog-layer absolute w-[200%] h-full top-0 -left-1/2 blur-[4vmin]" />
       </div>
-      
-      {/* Vignette */}
       <div className="vignette absolute inset-0 z-[9] pointer-events-none" />
 
-      {/* 404 Content */}
       <div className="relative z-[100] text-center px-4">
         <h1 
           className="font-[var(--font-cinzel)] text-[10vmin] font-bold text-white leading-none mb-2"
@@ -168,7 +144,7 @@ export default function NotFound() {
           href="/"
           className="inline-block font-['Cooper_Hewitt'] text-[1.2vmin] tracking-[0.3em] text-white/80 border border-white/20 px-8 py-3 rounded hover:bg-white/10 hover:border-white/40 hover:text-white transition-all duration-300"
         >
-          {d("RVNDQVBFIFRPIEEgU0FGRVIgUExBTkUg4oCm")}
+          {d("RVNDQVBFIFRPIEEgU0FGRVIgUExBTkU=")} →
         </Link>
       </div>
     </div>
