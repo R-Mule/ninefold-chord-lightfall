@@ -3,9 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-// Import your actual audio system from components
-import { getAudio, switchTrack } from "./components/Countdown";
-
 function lerp(start: number, end: number, factor: number): number {
   return start + (end - start) * factor;
 }
@@ -20,26 +17,18 @@ export default function NotFound() {
   useEffect(() => {
     setIsActive(true);
 
-    // ⭐ USE THE SAME GLOBAL AUDIO SYSTEM AS COUNTDOWN ⭐
-    let globalAudio = getAudio();
-
-    if (!globalAudio) {
-      // No audio exists yet → create it
-      globalAudio = new Audio("/You Shall Be Remembered.mp3");
-      globalAudio.loop = true;
-      globalAudio.volume = 0.5;
-      globalAudio.preload = "auto";
-    } else {
-      // Countdown audio exists → switch track
-      switchTrack("/You Shall Be Remembered.mp3");
-    }
+    // ⭐ LOCAL AUDIO INSTANCE (same pattern as countdown page)
+    const audio = new Audio("/You Shall Be Remembered.mp3");
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.preload = "auto";
 
     let audioUnlocked = false;
 
     const tryPlayAudio = () => {
-      if (!globalAudio || audioUnlocked) return;
+      if (audioUnlocked) return;
 
-      globalAudio.play()
+      audio.play()
         .then(() => {
           audioUnlocked = true;
           removeListeners();
@@ -105,7 +94,7 @@ export default function NotFound() {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationRef.current);
 
-      globalAudio?.pause();
+      audio.pause();
 
       document.removeEventListener("click", enableAudio);
       document.removeEventListener("touchstart", enableAudio);
