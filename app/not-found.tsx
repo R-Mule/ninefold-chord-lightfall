@@ -16,6 +16,37 @@ export default function NotFound() {
 
   useEffect(() => {
     setIsActive(true);
+useEffect(() => {
+  setIsActive(true);
+
+  // ⭐ AUDIO AUTOPLAY SETUP ⭐
+  const audio = new Audio("/You Shall Be Remembered.mp3");
+  audio.loop = true;
+  audio.volume = 0;        // start silent
+  audio.muted = true;      // required for autoplay
+  audio.preload = "auto";
+
+  audio.play().then(() => {
+    // Unmute and fade in
+    audio.muted = false;
+
+    let v = 0;
+    const fade = setInterval(() => {
+      v += 0.02; // fade speed
+      audio.volume = Math.min(v, 1.0);
+      if (v >= 1.0) clearInterval(fade);
+    }, 100);
+  }).catch(() => {
+    // If autoplay fails, wait for user interaction
+    const unlock = () => {
+      audio.play().catch(() => {});
+      document.removeEventListener("click", unlock);
+      document.removeEventListener("keydown", unlock);
+    };
+
+    document.addEventListener("click", unlock);
+    document.addEventListener("keydown", unlock);
+  });
 
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
@@ -51,6 +82,8 @@ export default function NotFound() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationRef.current);
+        // Stop audio when leaving page
+  audio.pause();
     };
   }, []);
 
