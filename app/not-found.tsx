@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 // Import your actual audio system from components
-import { getAudio, switchTrack } from "./components/countdown.tsx";
+import { getAudio, switchTrack } from "./components/Countdown";
 
 function lerp(start: number, end: number, factor: number): number {
   return start + (end - start) * factor;
