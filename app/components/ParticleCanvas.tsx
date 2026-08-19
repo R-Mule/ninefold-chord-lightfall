@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+
 const START_DATE = new Date("August 18, 2026 00:00:00");
 const TARGET_DATE = new Date("November 16, 2026 19:30:00");
 
@@ -172,31 +173,26 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  // ⭐ 9-CIRCLE CLOCKWISE RITUAL
+  // ⭐ LOOSE 9-CIRCLE CLOCKWISE RITUAL
   useEffect(() => {
     let points: { x: number; y: number }[] = [];
     let circleCount = 0;
 
-    const MIN_POINTS = 40;
-    const MIN_RADIUS = 80;
-    const MAX_RADIUS_VARIANCE = 0.45;
-    const CLOCKWISE_THRESHOLD = 0.6;
+    const MIN_POINTS = 25;
+    const MIN_RADIUS = 40;
+    const MAX_RADIUS_VARIANCE = 0.75;
+    const CLOCKWISE_THRESHOLD = 0.45;
 
     const handler = (e: MouseEvent) => {
       points.push({ x: e.clientX, y: e.clientY });
 
       if (points.length < MIN_POINTS) return;
 
-      const cx =
-        points.reduce((a, p) => a + p.x, 0) / points.length;
-      const cy =
-        points.reduce((a, p) => a + p.y, 0) / points.length;
+      const cx = points.reduce((a, p) => a + p.x, 0) / points.length;
+      const cy = points.reduce((a, p) => a + p.y, 0) / points.length;
 
-      const radii = points.map((p) =>
-        Math.hypot(p.x - cx, p.y - cy)
-      );
-      const avgRadius =
-        radii.reduce((a, r) => a + r, 0) / radii.length;
+      const radii = points.map((p) => Math.hypot(p.x - cx, p.y - cy));
+      const avgRadius = radii.reduce((a, r) => a + r, 0) / radii.length;
 
       const variance =
         radii.filter(
@@ -205,7 +201,7 @@ export default function ParticleCanvas() {
             avgRadius * MAX_RADIUS_VARIANCE
         ).length / radii.length;
 
-      if (avgRadius < MIN_RADIUS || variance > 0.25) {
+      if (avgRadius < MIN_RADIUS || variance > 0.55) {
         points = [];
         return;
       }
@@ -216,7 +212,11 @@ export default function ParticleCanvas() {
 
       let clockwise = 0;
       for (let i = 1; i < angles.length; i++) {
-        const diff = angles[i] - angles[i - 1];
+        let diff = angles[i] - angles[i - 1];
+
+        if (diff > Math.PI) diff -= Math.PI * 2;
+        if (diff < -Math.PI) diff += Math.PI * 2;
+
         if (diff < 0) clockwise++;
       }
 
