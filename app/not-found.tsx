@@ -151,7 +151,7 @@ export default function NotFound() {
           className="font-[var(--font-cinzel)] text-[3vmin] font-bold text-white tracking-[0.5vmin] mb-4"
           style={{ textShadow: "0 0.4vmin 2vmin rgba(255, 255, 255, 0.377)" }}
         >
-          THE WHISPERED ONE IS HERE
+          The Whispered One has returned.
         </p>
 
         <p 
