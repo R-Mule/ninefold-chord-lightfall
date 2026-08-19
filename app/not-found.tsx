@@ -55,6 +55,10 @@ export default function NotFound() {
     document.addEventListener("keydown", enableAudio);
     document.addEventListener("scroll", enableAudio);
 
+    // ⭐ FORCE A SYNTHETIC CLICK TO UNLOCK AUDIO ⭐
+    // Browsers block autoplay on secondary pages unless interaction is simulated
+    document.body.click();
+
     // Try autoplay immediately
     tryPlayAudio();
 
