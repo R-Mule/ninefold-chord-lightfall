@@ -10,7 +10,7 @@ interface TimeLeft {
   seconds: number;
 }
 
-const TARGET_DATE = new Date("November 16, 2026 19:30:00");
+const TARGET_DATE = new Date("January 11, 2027 19:30:00");
 
 function calculateTimeLeft(): TimeLeft | null {
   const now = new Date();
