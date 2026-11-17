@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 const START_DATE = new Date("August 18, 2026 00:00:00");
-const TARGET_DATE = new Date("November 16, 2026 19:30:00");
+const TARGET_DATE = new Date("January 11, 2027 19:30:00");
 
 interface DustParticle {
   x: number;
