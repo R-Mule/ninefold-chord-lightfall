@@ -11,7 +11,7 @@ const cinzel = Cinzel({
 export const metadata: Metadata = {
   title: "Lightfall Clock | Lightfall Countdown",
   description:
-    "Countdown to Lightfall: releasing November 16, 2026.",
+    "Countdown to Lightfall: releasing January 11, 2027.",
   keywords: [
     "Lightfall",
     "Ninefold Chord",
